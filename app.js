@@ -59,6 +59,12 @@ app.put("/productos/:id", async (req, res) => {
     res.redirect(`/productos/${producto._id}`);
 });
 
+app.delete("/productos/:id", async (req, res) => {
+    const { id } = req.params;
+    await Producto.findByIdAndDelete(id);
+    res.redirect("/productos");
+});
+
 app.listen(PORT, () => {
     console.log(`Serving on port 3000`);
 });

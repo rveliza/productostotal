@@ -9,9 +9,13 @@
 <body>
     <h1> <%= producto.nombre %> </h1>
     <h2> <%= producto.precio %> </h2>
+    <p><a href="/productos/<%= producto._id %>/edit">Editar Producto</a></p>
+
+    <form action="/productos/<%= producto._id %>?_method=DELETE" method="POST">
+        <button>Eliminar Producto</button>
+    </form>
 
     <footer>
-        <a href="/productos/<%= producto._id %>/edit">Editar Producto</a>
         <a href="/productos">PRODUCTOS</a>
     </footer>
 </body>
