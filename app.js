@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const methodOverride = require("method-override");
 const Producto = require("./models/producto");
 const path = require("path");
 const { render } = require("express/lib/response");
@@ -18,6 +19,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded( {extended: true }));
+app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
     res.render("home");
@@ -45,6 +47,18 @@ app.get("/productos/:id", async (req, res) => {
     res.render("productos/show", { producto });
 });
 
+app.get("/productos/:id/edit", async (req, res) => {
+    const producto = await Producto.findById(req.params.id);
+    res.render("productos/edit", { producto });
+});
+
+app.put("/productos/:id", async (req, res) => {
+    // res.send("IT WORKED!");
+    const { id } = req.params;
+    const producto = await Producto.findByIdAndUpdate(id, {...req.body.producto});
+    res.redirect(`/productos/${producto._id}`);
+});
+
 app.listen(PORT, () => {
-    console.log(`Servint on port 3000`);
+    console.log(`Serving on port 3000`);
 });
