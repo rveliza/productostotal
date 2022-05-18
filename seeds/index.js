@@ -15,7 +15,7 @@ const seedDB = async () => {
     for (let i = 0; i < 20; i++) {
         const randNum = Math.floor(Math.random() * 1000) + 200;
         const prod = new Producto({
-            nombre: `Producto ${i}`,
+            nombre: `Producto ${i + 1}`,
             precio: `${randNum}`
         });
         await prod.save();

@@ -20,16 +20,9 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-//Testear Producto
-app.get("/crearproducto", async (req, res) => {
-    const prod = new Producto({
-        nombre: "Producto 1",
-        precio: "55",
-        desc: "Mata todo",
-        imagen: "Cucaracha muerta"
-    });
-    await prod.save();
-    res.send(prod);
+app.get("/productos", async (req, res) => {
+    const productos = await Producto.find({});
+    res.render("productos/index", { productos });
 })
 
 app.listen(PORT, () => {
