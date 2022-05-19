@@ -8,7 +8,8 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
-// const sample = array => array[Math.floor(Math.random() * array.length)];
+const sample = array => array[Math.floor(Math.random() * array.length)];
+const unidades = ["galón", "litro", "botella", "caneca"]
 
 const seedDB = async () => {
     await Producto.deleteMany({});
@@ -16,7 +17,10 @@ const seedDB = async () => {
         const randNum = Math.floor(Math.random() * 1000) + 200;
         const prod = new Producto({
             nombre: `Producto ${i + 1}`,
-            precio: `${randNum}`
+            precio: randNum,
+            unidad: sample(unidades),
+            desc: "Descripción del producto",
+            imagen: "https://source.unsplash.com/collection/1130900"
         });
         await prod.save();
     }

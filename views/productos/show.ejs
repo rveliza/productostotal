@@ -1,7 +1,8 @@
 <% layout("layouts/boilerplate") %> 
 
 <h1> <%= producto.nombre %> </h1>
-<h2> <%= producto.precio %> </h2>
+<h2> <%= producto.precio %> / <%= producto.unidad %> </h2>
+<img src="<%= producto.imagen %>" alt="">
 <p><a href="/productos/<%= producto._id %>/edit">Editar Producto</a></p>
 
 <form action="/productos/<%= producto._id %>?_method=DELETE" method="POST">
