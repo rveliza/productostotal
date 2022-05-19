@@ -1,13 +1,26 @@
 <% layout("layouts/boilerplate") %> 
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card mb-3">
+            <img src="<%= producto.imagen %>" alt="" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title"><%= producto.nombre %></h5>
+                <p class="card-text"><%= producto.desc %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><%= producto.precio %> quetzales.</li>
+                <li class="list-group-item text-muted">Presentación: <%= producto.unidad %></li>
+            </ul>
+            <div class="card-body">
+                <a href="/productos/<%= producto._id %>/edit" class="card-link btn btn-info">Editar Producto</a>
+                <form class="d-inline" action="/productos/<%= producto._id %>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Eliminar Producto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h1> <%= producto.nombre %> </h1>
-<h2> <%= producto.precio %> / <%= producto.unidad %> </h2>
-<p> <%= producto.desc %> </p>
 
-<img src="<%= producto.imagen %>" alt="">
-<p><a href="/productos/<%= producto._id %>/edit">Editar Producto</a></p>
 
-<form action="/productos/<%= producto._id %>?_method=DELETE" method="POST">
-    <button>Eliminar Producto</button>
-</form>
 
