@@ -13,6 +13,14 @@
                 <input class="form-control" type="number" id="precio" name="producto[precio]">
             </div>
             <div class="mb-3">
+                <select name="producto[unidad]" class="form-select" aria-label="Default select example">
+                    <option value="galon" selected>Galón</option>
+                    <option value="litro">Litro</option>
+                    <option value="botella">Caneca</option>
+                    <option value="caneca">Barril</option>
+                  </select>
+            </div>
+            <div class="mb-3">
                 <button class="btn btn-success">Crear Producto</button>
             </div>
         </form>
