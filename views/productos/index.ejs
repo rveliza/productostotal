@@ -1,12 +1,24 @@
 <% layout("layouts/boilerplate") %> 
 
 <h1>Todos los productos</h1>
-<div>
-    <a href="/productos/new">Nuevo Producto</a>
-</div>
+
 
 <ul>
     <% for(let producto of productos) { %>
-        <li><a href="/productos/<%= producto._id %>"><%= producto.nombre %></a></li>
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="<%= producto.imagen %>" alt="" class="img-fluid">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= producto.nombre %></h5>
+                        <p class="card-text"><%= producto.desc %> </p>
+                        <p class="card-text">
+                        <a href="/productos/<%= producto._id %>" class="btn btn-primary"><%= producto.nombre %> </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     <% } %>
 </ul>
