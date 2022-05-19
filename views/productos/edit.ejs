@@ -10,7 +10,10 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="precio">Precio</label>
-                <input class="form-control" type="number" id="precio" name="producto[precio]" value="<%= producto.precio %>">
+                <div class="input-group">
+                    <span class="input-group-text" id="price-label">Q</span>
+                    <input class="form-control" type="number" id="precio" name="producto[precio]" value="<%= producto.precio %>">
+                </div>
             </div>
             <div class="mb-3">
                 <select name="producto[unidad]" class="form-select" aria-label="Default select example">
@@ -19,6 +22,10 @@
                     <option value="botella">Caneca</option>
                     <option value="caneca">Barril</option>
                   </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="desc">Descripción: </label>
+                <textarea class="form-control" name="producto[desc]" id="desc" cols="30" rows="3"><%= producto.desc %></textarea>
             </div>
             <div class="mb-3">
                 <button class="btn btn-info">Editar Producto</button>

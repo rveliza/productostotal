@@ -13,7 +13,7 @@ const unidades = ["galón", "litro", "botella", "caneca"]
 
 const seedDB = async () => {
     await Producto.deleteMany({});
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 3; i++) {
         const randNum = Math.floor(Math.random() * 1000) + 200;
         const prod = new Producto({
             nombre: `Producto ${i + 1}`,
