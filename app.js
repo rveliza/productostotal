@@ -5,6 +5,7 @@ const ejsMate = require("ejs-mate");
 const Producto = require("./models/producto");
 const path = require("path");
 const { render } = require("express/lib/response");
+const { nextTick } = require("process");
 const PORT = 3000;
 
 mongoose.connect("mongodb://localhost:27017/productos-total");
@@ -36,12 +37,14 @@ app.get("/productos/new", (req, res) => {
     res.render("productos/new");
 });
 
-app.post("/productos", async (req, res) => {
-    // res.send(req.body.producto);
-    // {"nombre":"Formol","precio":"23"}
-    const producto = new Producto(req.body.producto);
-    await producto.save();
-    res.redirect(`/productos/${producto._id}`);
+app.post("/productos", async (req, res, next) => {
+    try {
+        const producto = new Producto(req.body.producto);
+        await producto.save();
+        res.redirect(`/productos/${producto._id}`);
+    } catch(e) {
+        next(e);
+    }
 });
 
 app.get("/productos/:id", async (req, res) => {
@@ -65,6 +68,10 @@ app.delete("/productos/:id", async (req, res) => {
     const { id } = req.params;
     await Producto.findByIdAndDelete(id);
     res.redirect("/productos");
+});
+
+app.use((err, req, res, next) => {
+    res.send("Oh boy, something went wrong!");
 });
 
 app.listen(PORT, () => {
