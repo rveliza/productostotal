@@ -1,11 +1,11 @@
 const express = require("express");
+const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
-const ejsMate = require("ejs-mate");
 const Producto = require("./models/producto");
-const path = require("path");
-const { render } = require("express/lib/response");
-const { nextTick } = require("process");
+const ejsMate = require("ejs-mate");
+const catchAsync = require("./utils/catchAsync");
+const ExpressError = require("./utils/ExpressError");
 const PORT = 3000;
 
 mongoose.connect("mongodb://localhost:27017/productos-total");
@@ -28,50 +28,53 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-app.get("/productos", async (req, res) => {
+app.get("/productos", catchAsync(async (req, res) => {
     const productos = await Producto.find({});
     res.render("productos/index", { productos });
-});
+}));
 
 app.get("/productos/new", (req, res) => {
     res.render("productos/new");
 });
 
-app.post("/productos", async (req, res, next) => {
-    try {
+app.post("/productos", catchAsync(async (req, res, next) => {
+    if(!req.body.producto) throw new ExpressError("Invalid Producto Data", 400);
         const producto = new Producto(req.body.producto);
         await producto.save();
         res.redirect(`/productos/${producto._id}`);
-    } catch(e) {
-        next(e);
-    }
-});
+}));
 
-app.get("/productos/:id", async (req, res) => {
+app.get("/productos/:id", catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
     res.render("productos/show", { producto });
-});
+}));
 
-app.get("/productos/:id/edit", async (req, res) => {
+app.get("/productos/:id/edit", catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
     res.render("productos/edit", { producto });
-});
+}));
 
-app.put("/productos/:id", async (req, res) => {
+app.put("/productos/:id", catchAsync(async (req, res) => {
     // res.send("IT WORKED!");
     const { id } = req.params;
     const producto = await Producto.findByIdAndUpdate(id, {...req.body.producto});
     res.redirect(`/productos/${producto._id}`);
-});
+}));
 
-app.delete("/productos/:id", async (req, res) => {
+app.delete("/productos/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
     await Producto.findByIdAndDelete(id);
     res.redirect("/productos");
-});
+}));
+
+app.all("*", (req, res, next) => {
+    next(new ExpressError("Page Not Found!", 404));
+})
 
 app.use((err, req, res, next) => {
-    res.send("Oh boy, something went wrong!");
+    // res.send("Oh boy, something went wrong!");
+    const { statusCode = 500, message = "Something went wrong" } = err;
+    res.status(statusCode).send(message);
 });
 
 app.listen(PORT, () => {
