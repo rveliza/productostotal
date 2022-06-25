@@ -1,3 +1,7 @@
+if (process.env.MODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -6,9 +10,12 @@ const Producto = require("./models/producto");
 const ejsMate = require("ejs-mate");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
-const PORT = 3000;
+const port = process.env.PORT || 4000;
 
-mongoose.connect("mongodb://localhost:27017/productos-total");
+
+// const dbURL = mongodb://localhost:27017/productos-total
+const dbURL = process.env.DB_URL
+mongoose.connect(dbURL);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
@@ -77,6 +84,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).send(message);
 });
 
-app.listen(PORT, () => {
-    console.log(`Serving on port 3000`);
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
 });
