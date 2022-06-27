@@ -10,6 +10,8 @@ const Producto = require("./models/producto");
 const ejsMate = require("ejs-mate");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
+const Joi = require('joi');
+const { join } = require('path');
 const port = process.env.PORT || 4000;
 
 
@@ -45,10 +47,25 @@ app.get("/productos/new", (req, res) => {
 });
 
 app.post("/productos", catchAsync(async (req, res, next) => {
-    if(!req.body.producto) throw new ExpressError("Invalid Producto Data", 400);
-        const producto = new Producto(req.body.producto);
-        await producto.save();
-        res.redirect(`/productos/${producto._id}`);
+    // if(!req.body.producto) throw new ExpressError("Invalid Producto Data", 400);
+
+    const productoSchema = Joi.object({
+        producto: Joi.object({
+            nombre: Joi.string().required(),
+            precio: Joi.number().required().min(0),
+            unidad: join.string().required(),
+            desc: Joi.string().required(),
+            imagen: Joi.string().required()
+        }).required()
+    });
+    const { error } = productoSchema.validate(req.body);
+    if(error ) {
+        const msg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(msg, 400);
+    }
+    const producto = new Producto(req.body.producto);
+    await producto.save();
+    res.redirect(`/productos/${producto._id}`);
 }));
 
 app.get("/productos/:id", catchAsync(async (req, res) => {
