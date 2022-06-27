@@ -55,7 +55,7 @@ app.get("/productos/new", (req, res) => {
     res.render("productos/new");
 });
 
-app.post("/productos", catchAsync(async (req, res, next) => {
+app.post("/productos", validateProducto, catchAsync(async (req, res, next) => {
     const producto = new Producto(req.body.producto);
     await producto.save();
     res.redirect(`/productos/${producto._id}`);
@@ -71,8 +71,7 @@ app.get("/productos/:id/edit", catchAsync(async (req, res) => {
     res.render("productos/edit", { producto });
 }));
 
-app.put("/productos/:id", catchAsync(async (req, res) => {
-    // res.send("IT WORKED!");
+app.put("/productos/:id", validateProducto, catchAsync(async (req, res) => {
     const { id } = req.params;
     const producto = await Producto.findByIdAndUpdate(id, {...req.body.producto});
     res.redirect(`/productos/${producto._id}`);
