@@ -6,7 +6,13 @@ const ProductoSchema = new Schema({
     precio: Number,
     unidad: String,
     desc: String,
-    imagen: String
+    imagen: String,
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Review"
+        }
+    ]
 });
 
 module.exports = mongoose.model("Producto", ProductoSchema);
