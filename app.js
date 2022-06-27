@@ -13,7 +13,7 @@ const ExpressError = require("./utils/ExpressError");
 const port = process.env.PORT || 4000;
 
 
-// const dbURL = mongodb://localhost:27017/productos-total
+// const dbURL = "mongodb://localhost:27017/productos-total"
 const dbURL = process.env.DB_URL
 mongoose.connect(dbURL);
 const db = mongoose.connection;
@@ -79,9 +79,9 @@ app.all("*", (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    // res.send("Oh boy, something went wrong!");
-    const { statusCode = 500, message = "Something went wrong" } = err;
-    res.status(statusCode).send(message);
+    const { statusCode = 500 } = err;
+    if(!err.message) err.message = "Algo salió mal..."; 
+    res.status(statusCode).render("error", { err });
 });
 
 app.listen(port, () => {
