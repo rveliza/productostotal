@@ -33,15 +33,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded( {extended: true }));
 app.use(methodOverride("_method"));
 
-const validateProducto = (req, res, next) => {
-    const { error } = productoSchema.validate(req.body);
-    if(error ) {
-        const msg = error.details.map(el => el.message).join(",");
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
+
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
     if(error ) {
@@ -52,46 +44,13 @@ const validateReview = (req, res, next) => {
     }
 }
 
+app.use('/productos', productos);
+
 app.get("/", (req, res) => {
     res.render("home");
 });
 
-app.get("/productos", catchAsync(async (req, res) => {
-    const productos = await Producto.find({});
-    res.render("productos/index", { productos });
-}));
 
-app.get("/productos/new", (req, res) => {
-    res.render("productos/new");
-});
-
-app.post("/productos", validateProducto, catchAsync(async (req, res, next) => {
-    const producto = new Producto(req.body.producto);
-    await producto.save();
-    res.redirect(`/productos/${producto._id}`);
-}));
-
-app.get("/productos/:id", catchAsync(async (req, res) => {
-    const producto = await Producto.findById(req.params.id).populate('reviews');
-    res.render("productos/show", { producto });
-}));
-
-app.get("/productos/:id/edit", catchAsync(async (req, res) => {
-    const producto = await Producto.findById(req.params.id);
-    res.render("productos/edit", { producto });
-}));
-
-app.put("/productos/:id", validateProducto, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const producto = await Producto.findByIdAndUpdate(id, {...req.body.producto});
-    res.redirect(`/productos/${producto._id}`);
-}));
-
-app.delete("/productos/:id", catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Producto.findByIdAndDelete(id);
-    res.redirect("/productos");
-}));
 
 app.post('/productos/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
