@@ -14,6 +14,7 @@ const { productoSchema, reviewSchema } = require('./schemas.js')
 const Review = require('./models/review');
 const port = process.env.PORT || 4000;
 
+const productos = require('./routes/productos')
 
 // const dbURL = "mongodb://localhost:27017/productos-total"
 const dbURL = process.env.DB_URL
