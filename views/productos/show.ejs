@@ -34,8 +34,10 @@
         </form> 
         <% for( let review of producto.reviews ) { %>
             <div class="mb-3">
-                <p>Estrellas: <%= review.rating %></p>
-                <p>Comentario: <%= review.body %></p>
+                <div class="card-body">
+                    <h5 class="card-title">Estrellas: <%= review.rating %></h5>
+                    <p class="card-text">Comentario: <%= review.body %></p>
+                </div>
             </div>
         <% } %>
     </div>
