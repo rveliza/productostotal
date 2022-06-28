@@ -37,6 +37,9 @@
                 <div class="card-body">
                     <h5 class="card-title">Estrellas: <%= review.rating %></h5>
                     <p class="card-text">Comentario: <%= review.body %></p>
+                    <form action="/productos/<%= producto._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
                 </div>
             </div>
         <% } %>
