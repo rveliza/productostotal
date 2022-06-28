@@ -72,7 +72,7 @@ app.post("/productos", validateProducto, catchAsync(async (req, res, next) => {
 }));
 
 app.get("/productos/:id", catchAsync(async (req, res) => {
-    const producto = await Producto.findById(req.params.id);
+    const producto = await Producto.findById(req.params.id).populate('reviews');
     res.render("productos/show", { producto });
 }));
 
