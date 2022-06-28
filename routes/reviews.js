@@ -20,7 +20,7 @@ const validateReview = (req, res, next) => {
 
 
 
-app.post('/', validateReview, catchAsync(async (req, res) => {
+router.post('/', validateReview, catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
     const review = new Review(req.body.review);
     producto.reviews.push(review);
@@ -29,16 +29,12 @@ app.post('/', validateReview, catchAsync(async (req, res) => {
     res.redirect(`/productos/${producto._id}`);
 }));
 
-app.delete("/:reviewId", catchAsync(async (req, res) =>{
+router.delete("/:reviewId", catchAsync(async (req, res) =>{
     const { id, reviewId } = req.params;
     await Producto.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
     res.redirect(`/productos/${id}`);
 }));
-
-app.all("*", (req, res, next) => {
-    next(new ExpressError("Page Not Found!", 404));
-})
 
 
 module.exports = router;
