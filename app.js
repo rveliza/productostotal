@@ -10,7 +10,7 @@ const Producto = require("./models/producto");
 const ejsMate = require("ejs-mate");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
-const { productoSchema } = require('./schemas.js')
+const { productoSchema, reviewSchema } = require('./schemas.js')
 const Review = require('./models/review');
 const port = process.env.PORT || 4000;
 
@@ -35,6 +35,15 @@ app.use(methodOverride("_method"));
 
 const validateProducto = (req, res, next) => {
     const { error } = productoSchema.validate(req.body);
+    if(error ) {
+        const msg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if(error ) {
         const msg = error.details.map(el => el.message).join(",");
         throw new ExpressError(msg, 400);
@@ -84,7 +93,7 @@ app.delete("/productos/:id", catchAsync(async (req, res) => {
     res.redirect("/productos");
 }));
 
-app.post('/productos/:id/reviews', catchAsync(async (req, res) => {
+app.post('/productos/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
     const review = new Review(req.body.review);
     producto.reviews.push(review);
