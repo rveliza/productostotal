@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require('./review')
 
 const ProductoSchema = new Schema({
     nombre: String,
@@ -13,6 +14,18 @@ const ProductoSchema = new Schema({
             ref: "Review"
         }
     ]
+});
+
+ProductoSchema.post("findOneAndDelete", async function (doc) {
+    // console.log("DELETED!!!!");
+    // console.log(doc);
+    if (doc){
+        await Review.deleteMany({
+            _id: {
+                $in: doc.reviews
+            }
+        });
+    }
 });
 
 module.exports = mongoose.model("Producto", ProductoSchema);
