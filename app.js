@@ -11,6 +11,7 @@ const ejsMate = require("ejs-mate");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const { productoSchema } = require('./schemas.js')
+const Review = require('./models/review');
 const port = process.env.PORT || 4000;
 
 
@@ -81,6 +82,15 @@ app.delete("/productos/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
     await Producto.findByIdAndDelete(id);
     res.redirect("/productos");
+}));
+
+app.post('/productos/:id/reviews', catchAsync(async (req, res) => {
+    const producto = await Producto.findById(req.params.id);
+    const review = new Review(req.body.review);
+    producto.reviews.push(review);
+    await review.save();
+    await producto.save();
+    res.redirect(`/productos/${producto._id}`);
 }));
 
 app.all("*", (req, res, next) => {
