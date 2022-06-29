@@ -28,6 +28,7 @@ router.get("/new", (req, res) => {
 router.post("/", validateProducto, catchAsync(async (req, res, next) => {
     const producto = new Producto(req.body.producto);
     await producto.save();
+    req.flash("success", "Producto creado con éxito!");
     res.redirect(`/productos/${producto._id}`);
 }));
 
