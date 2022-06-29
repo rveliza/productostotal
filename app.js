@@ -15,8 +15,9 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const port = process.env.PORT || 4000;
 
-const productos = require('./routes/productos');
-const reviews = require('./routes/reviews');
+const usersRoutes = require('./routes/users');
+const productoRoutes = require('./routes/productos');
+const reviewRoutes = require('./routes/reviews');
 
 // const dbURL = "mongodb://localhost:27017/productos-total"
 const dbURL = process.env.DB_URL
@@ -67,8 +68,10 @@ app.get("/fakeUser", async (req, res) => {
     res.send(newUser);
 });
 
-app.use('/productos', productos);
-app.use('/productos/:id/reviews', reviews);
+app.use('/productos', productoRoutes);
+app.use('/productos/:id/reviews', reviewRoutes);
+app.use('/', usersRoutes);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/", (req, res) => {
