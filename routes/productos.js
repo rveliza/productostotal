@@ -34,11 +34,19 @@ router.post("/", validateProducto, catchAsync(async (req, res, next) => {
 
 router.get("/:id", catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id).populate('reviews');
+    if (!producto) {
+        req.flash('error', '!No se pudo encontrar ese producto¡');
+        return res.redirect('/productos');
+    }
     res.render("productos/show", { producto });
 }));
 
 router.get("/:id/edit", catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
+    if (!producto) {
+        req.flash('error', '!No se pudo encontrar ese producto¡');
+        return res.redirect('/productos');
+    }
     res.render("productos/edit", { producto });
 }));
 
