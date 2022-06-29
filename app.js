@@ -5,9 +5,10 @@ if (process.env.MODE_ENV !== "production") {
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
-const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+const session = require('express-session');
 const ExpressError = require("./utils/ExpressError");
+const methodOverride = require("method-override");
 const port = process.env.PORT || 4000;
 
 const productos = require('./routes/productos');
@@ -30,6 +31,18 @@ app.use(methodOverride("_method"));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig))
 
 app.use('/productos', productos);
 app.use('/productos/:id/reviews', reviews);
