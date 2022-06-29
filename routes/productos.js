@@ -28,7 +28,7 @@ router.get("/new", (req, res) => {
 router.post("/", validateProducto, catchAsync(async (req, res, next) => {
     const producto = new Producto(req.body.producto);
     await producto.save();
-    req.flash("success", "Producto creado con éxito!");
+    req.flash("success", "¡Producto creado con éxito!");
     res.redirect(`/productos/${producto._id}`);
 }));
 
@@ -45,12 +45,14 @@ router.get("/:id/edit", catchAsync(async (req, res) => {
 router.put("/:id", validateProducto, catchAsync(async (req, res) => {
     const { id } = req.params;
     const producto = await Producto.findByIdAndUpdate(id, {...req.body.producto});
+    req.flash('success', '¡Producto actualizado con éxito!')
     res.redirect(`/productos/${producto._id}`);
 }));
 
 router.delete("/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
     await Producto.findByIdAndDelete(id);
+    req.flash('success', "¡Producto eliminado con éxito!");
     res.redirect("/productos");
 }));
 
