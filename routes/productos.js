@@ -5,7 +5,7 @@ const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, isAuthor, validateProducto } = require('../middleware');
 
 router.route('/')
-    .get("/"catchAsync(productos.index))
+    .get(catchAsync(productos.index))
     .post(isLoggedIn, validateProducto, catchAsync(productos.createProducto));
 
 router.get("/new", isLoggedIn, productos.renderNewForm);
