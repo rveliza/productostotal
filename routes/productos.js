@@ -23,7 +23,12 @@ router.post("/", isLoggedIn, validateProducto, catchAsync(async (req, res, next)
 }));
 
 router.get("/:id", catchAsync(async (req, res) => {
-    const producto = await Producto.findById(req.params.id).populate('reviews').populate('author');
+    const producto = await Producto.findById(req.params.id).populate({
+        path: "reviews",
+        populate: {
+            path: 'author'
+        }
+    }).populate('author');
     if (!producto) {
         req.flash('error', '!No se pudo encontrar ese producto¡');
         return res.redirect('/productos');
