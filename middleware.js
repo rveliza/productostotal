@@ -1,6 +1,6 @@
 const { productoSchema, reviewSchema } = require("./schemas.js");
 const ExpressError = require("./utils/ExpressError");
-const Producto = require("./models/campground");
+const Producto = require("./models/producto");
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
