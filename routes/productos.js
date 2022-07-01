@@ -4,7 +4,8 @@ const productos = require('../controllers/productos');
 const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, isAuthor, validateProducto } = require('../middleware');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const { storage } = require('../cloudinary/index');
+const upload = multer({ storage });
 
 router.route('/')
     .get(catchAsync(productos.index))
