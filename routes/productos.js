@@ -17,6 +17,16 @@ const validateProducto = (req, res, next) => {
     }
 }
 
+const isAuthor = async (req, res, next) => {
+    const { id } = req.params;
+    const producto = await Producto.findById(id);
+    if(!producto.author.equals(req.user._id)) {
+        req.flash('error', '¡No tienes permiso para hacer eso!');
+        return res.redirect(`/productos/${id}`);
+    }
+    next();
+}
+
 router.get("/", catchAsync(async (req, res) => {
     const productos = await Producto.find({});
     res.render("productos/index", { productos });
@@ -43,7 +53,7 @@ router.get("/:id", catchAsync(async (req, res) => {
     res.render("productos/show", { producto });
 }));
 
-router.get("/:id/edit", isLoggedIn, catchAsync(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, isAuthor, catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
     if (!producto) {
         req.flash('error', '!No se pudo encontrar ese producto¡');
@@ -52,19 +62,14 @@ router.get("/:id/edit", isLoggedIn, catchAsync(async (req, res) => {
     res.render("productos/edit", { producto });
 }));
 
-router.put("/:id", isLoggedIn, validateProducto, catchAsync(async (req, res) => {
+router.put("/:id", isLoggedIn, isAuthor, validateProducto, catchAsync(async (req, res) => {
     const { id } = req.params;
-    const producto = await Producto.findById(id);
-    if(!producto.author.equals(req.user._id)) {
-        req.flash('error', '¡No tienes permiso para hacer eso!');
-        return res.redirect(`/productos/${id}`);
-    }
-    const prod = await Producto.findByIdAndUpdate(id, { ...req.body.campground });
+    const producto = await Producto.findById(id, { ...req.body.campground });
     req.flash('success', '¡Producto actualizado con éxito!')
-    res.redirect(`/productos/${prod._id}`);
+    res.redirect(`/productos/${producto._id}`);
 }));
 
-router.delete("/:id", isLoggedIn, catchAsync(async (req, res) => {
+router.delete("/:id", isLoggedIn, isAuthor, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Producto.findByIdAndDelete(id);
     req.flash('success', "¡Producto eliminado con éxito!");
