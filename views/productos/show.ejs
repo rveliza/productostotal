@@ -8,6 +8,7 @@
                 <p class="card-text"><%= producto.desc %></p>
             </div>
             <ul class="list-group list-group-flush">
+                <li class="list-group-item">Creado por: <%= producto.author.usuario%></li>
                 <li class="list-group-item"><%= producto.precio %> quetzales.</li>
                 <li class="list-group-item text-muted">Presentación: <%= producto.unidad %></li>
             </ul>

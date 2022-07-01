@@ -8,6 +8,10 @@ const ProductoSchema = new Schema({
     unidad: String,
     desc: String,
     imagen: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,

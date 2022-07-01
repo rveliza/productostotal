@@ -23,23 +23,19 @@ router.get("/", catchAsync(async (req, res) => {
 }));
 
 router.get("/new", isLoggedIn, (req, res) => {
-    // if (!req.isAuthenticated()) {
-    //     req.flash('error', 'you must be signed in');
-    //     // res.redirect('/login');
-    //     return res.redirect('/login');
-    // }
     res.render("productos/new");
 });
 
 router.post("/", isLoggedIn, validateProducto, catchAsync(async (req, res, next) => {
     const producto = new Producto(req.body.producto);
+    producto.author = req.user._id;
     await producto.save();
     req.flash("success", "¡Producto creado con éxito!");
     res.redirect(`/productos/${producto._id}`);
 }));
 
 router.get("/:id", catchAsync(async (req, res) => {
-    const producto = await Producto.findById(req.params.id).populate('reviews');
+    const producto = await Producto.findById(req.params.id).populate('reviews').populate('author');
     if (!producto) {
         req.flash('error', '!No se pudo encontrar ese producto¡');
         return res.redirect('/productos');
