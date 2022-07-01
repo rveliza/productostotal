@@ -4,19 +4,17 @@ const productos = require('../controllers/productos');
 const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, isAuthor, validateProducto } = require('../middleware');
 
-
-router.get("/", catchAsync(productos.index));
+router.route('/')
+    .get("/"catchAsync(productos.index))
+    .post(isLoggedIn, validateProducto, catchAsync(productos.createProducto));
 
 router.get("/new", isLoggedIn, productos.renderNewForm);
 
-router.post("/", isLoggedIn, validateProducto, catchAsync(productos.createProducto));
-
-router.get("/:id", catchAsync(productos.showProducto));
+router.route('/:id')
+    .get(catchAsync(productos.showProducto))
+    .put(isLoggedIn, isAuthor, validateProducto, catchAsync(productos.updateProducto))
+    .delete(isLoggedIn, isAuthor, catchAsync(productos.deleteProducto));
 
 router.get("/:id/edit", isLoggedIn, isAuthor, catchAsync(productos.renderEditForm));
-
-router.put("/:id", isLoggedIn, isAuthor, validateProducto, catchAsync(productos.updateProducto));
-
-router.delete("/:id", isLoggedIn, isAuthor, catchAsync(productos.deleteProducto));
 
 module.exports = router;
