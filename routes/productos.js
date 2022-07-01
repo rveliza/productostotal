@@ -1,31 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
-const ExpressError = require("../utils/ExpressError");
 const Producto = require("../models/producto");
-const { productoSchema } = require('../schemas.js');
-const { isLoggedIn } = require('../middleware');
+const { isLoggedIn, isAuthor, validateProducto } = require('../middleware');
 
-
-const validateProducto = (req, res, next) => {
-    const { error } = productoSchema.validate(req.body);
-    if(error ) {
-        const msg = error.details.map(el => el.message).join(",");
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
-
-const isAuthor = async (req, res, next) => {
-    const { id } = req.params;
-    const producto = await Producto.findById(id);
-    if(!producto.author.equals(req.user._id)) {
-        req.flash('error', '¡No tienes permiso para hacer eso!');
-        return res.redirect(`/productos/${id}`);
-    }
-    next();
-}
 
 router.get("/", catchAsync(async (req, res) => {
     const productos = await Producto.find({});
