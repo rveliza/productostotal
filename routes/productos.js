@@ -54,9 +54,14 @@ router.get("/:id/edit", isLoggedIn, catchAsync(async (req, res) => {
 
 router.put("/:id", isLoggedIn, validateProducto, catchAsync(async (req, res) => {
     const { id } = req.params;
-    const producto = await Producto.findByIdAndUpdate(id, {...req.body.producto});
+    const producto = await Producto.findById(id);
+    if(!producto.author.equals(req.user._id)) {
+        req.flash('error', '¡No tienes permiso para hacer eso!');
+        return res.redirect(`/productos/${id}`);
+    }
+    const prod = await Producto.findByIdAndUpdate(id, { ...req.body.campground });
     req.flash('success', '¡Producto actualizado con éxito!')
-    res.redirect(`/productos/${producto._id}`);
+    res.redirect(`/productos/${prod._id}`);
 }));
 
 router.delete("/:id", isLoggedIn, catchAsync(async (req, res) => {
