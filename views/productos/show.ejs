@@ -12,12 +12,14 @@
                 <li class="list-group-item"><%= producto.precio %> quetzales.</li>
                 <li class="list-group-item text-muted">Presentación: <%= producto.unidad %></li>
             </ul>
-            <div class="card-body">
-                <a href="/productos/<%= producto._id %>/edit" class="card-link btn btn-info">Editar Producto</a>
-                <form class="d-inline" action="/productos/<%= producto._id %>?_method=DELETE" method="POST">
-                    <button class="btn btn-danger">Eliminar Producto</button>
-                </form>
-            </div>
+            <% if (currentUser && producto.author.equals(currentUser._id)) { %>            
+                <div class="card-body">
+                    <a href="/productos/<%= producto._id %>/edit" class="card-link btn btn-info">Editar Producto</a>
+                    <form class="d-inline" action="/productos/<%= producto._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">Eliminar Producto</button>
+                    </form>
+                </div>
+            <% } %>
         </div>
     </div>
     <div class="col-6">
