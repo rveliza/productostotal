@@ -19,6 +19,7 @@ const seedDB = async () => {
     for (let i = 0; i < 7; i++) {
         const randNum = Math.floor(Math.random() * 1000) + 200;
         const prod = new Producto({
+            author: "62bf0875f60b11e9f9ead2c1",
             nombre: `Producto ${i + 1}`,
             precio: randNum,
             unidad: sample(unidades),
