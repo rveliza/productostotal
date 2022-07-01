@@ -3,7 +3,8 @@ const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const Producto = require("../models/producto");
-const { productoSchema } = require('../schemas.js')
+const { productoSchema } = require('../schemas.js');
+const { isLoggedIn } = require('../middleware');
 
 
 const validateProducto = (req, res, next) => {
@@ -21,11 +22,16 @@ router.get("/", catchAsync(async (req, res) => {
     res.render("productos/index", { productos });
 }));
 
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
+    // if (!req.isAuthenticated()) {
+    //     req.flash('error', 'you must be signed in');
+    //     // res.redirect('/login');
+    //     return res.redirect('/login');
+    // }
     res.render("productos/new");
 });
 
-router.post("/", validateProducto, catchAsync(async (req, res, next) => {
+router.post("/", isLoggedIn, validateProducto, catchAsync(async (req, res, next) => {
     const producto = new Producto(req.body.producto);
     await producto.save();
     req.flash("success", "¡Producto creado con éxito!");
@@ -41,7 +47,7 @@ router.get("/:id", catchAsync(async (req, res) => {
     res.render("productos/show", { producto });
 }));
 
-router.get("/:id/edit", catchAsync(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, catchAsync(async (req, res) => {
     const producto = await Producto.findById(req.params.id);
     if (!producto) {
         req.flash('error', '!No se pudo encontrar ese producto¡');
@@ -50,14 +56,14 @@ router.get("/:id/edit", catchAsync(async (req, res) => {
     res.render("productos/edit", { producto });
 }));
 
-router.put("/:id", validateProducto, catchAsync(async (req, res) => {
+router.put("/:id", isLoggedIn, validateProducto, catchAsync(async (req, res) => {
     const { id } = req.params;
     const producto = await Producto.findByIdAndUpdate(id, {...req.body.producto});
     req.flash('success', '¡Producto actualizado con éxito!')
     res.redirect(`/productos/${producto._id}`);
 }));
 
-router.delete("/:id", catchAsync(async (req, res) => {
+router.delete("/:id", isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Producto.findByIdAndDelete(id);
     req.flash('success', "¡Producto eliminado con éxito!");
