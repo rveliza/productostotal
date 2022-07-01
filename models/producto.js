@@ -7,7 +7,12 @@ const ProductoSchema = new Schema({
     precio: Number,
     unidad: String,
     desc: String,
-    imagen: String,
+    images: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'

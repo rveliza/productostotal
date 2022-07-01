@@ -6,7 +6,7 @@ module.exports.productoSchema = Joi.object({
         precio: Joi.number().required().min(0),
         unidad: Joi.string().required(),
         desc: Joi.string().required(),
-        imagen: Joi.string().required()
+        // imagen: Joi.string().required()
     }).required()
 });
 

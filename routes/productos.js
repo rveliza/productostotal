@@ -9,11 +9,11 @@ const upload = multer({ storage });
 
 router.route('/')
     .get(catchAsync(productos.index))
-    // .post(isLoggedIn, validateProducto, catchAsync(productos.createProducto));
-    .post(upload.array('image'), (req, res) => {
-        console.log(req.body, req.files);
-        res.send('It Worked!');
-    });
+    .post(isLoggedIn, upload.array('image'), validateProducto, catchAsync(productos.createProducto));
+    // .post(upload.array('image'), (req, res) => {
+    //     console.log(req.body, req.files);
+    //     res.send('It Worked!');
+    // });
 
 router.get("/new", isLoggedIn, productos.renderNewForm);
 

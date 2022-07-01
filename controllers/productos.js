@@ -11,8 +11,10 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createProducto = async (req, res, next) => {
     const producto = new Producto(req.body.producto);
+    producto.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     producto.author = req.user._id;
     await producto.save();
+    console.log(producto);
     req.flash("success", "¡Producto creado con éxito!");
     res.redirect(`/productos/${producto._id}`);
 }
