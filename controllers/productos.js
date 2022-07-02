@@ -44,7 +44,12 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateProducto = async (req, res) => {
     const { id } = req.params;
-    const producto = await Producto.findById(id, { ...req.body.campground });
+    const producto = await Producto.findByIdAndUpdate(id, { ...req.body.producto });
+    // create array of images
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    // spread the array
+    producto.images.push(...imgs);
+    await producto.save()
     req.flash('success', '¡Producto actualizado con éxito!')
     res.redirect(`/productos/${producto._id}`);
 }

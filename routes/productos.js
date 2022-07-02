@@ -19,7 +19,7 @@ router.get("/new", isLoggedIn, productos.renderNewForm);
 
 router.route('/:id')
     .get(catchAsync(productos.showProducto))
-    .put(isLoggedIn, isAuthor, validateProducto, catchAsync(productos.updateProducto))
+    .put(isLoggedIn, isAuthor, upload.array('image'), validateProducto, catchAsync(productos.updateProducto))
     .delete(isLoggedIn, isAuthor, catchAsync(productos.deleteProducto));
 
 router.get("/:id/edit", isLoggedIn, isAuthor, catchAsync(productos.renderEditForm));
