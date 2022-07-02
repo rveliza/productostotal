@@ -16,7 +16,7 @@ const unidades = ["galón", "litro", "botella", "caneca"]
 
 const seedDB = async () => {
     await Producto.deleteMany({});
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 4; i++) {
         const randNum = Math.floor(Math.random() * 1000) + 200;
         const prod = new Producto({
             author: "62bf0875f60b11e9f9ead2c1",
@@ -24,7 +24,12 @@ const seedDB = async () => {
             precio: randNum,
             unidad: sample(unidades),
             desc: "Descripción del producto",
-            imagen: "https://source.unsplash.com/collection/1130900"
+            images: [
+                {
+                  url: 'https://res.cloudinary.com/dtrnszbzg/image/upload/v1656726820/ProductosTotal/prodTotal_wkgqmj.jpg',
+                  filename: 'ProductosTotal/prodTotal_wkgqmj'
+                }
+              ]
         });
         await prod.save();
     }
