@@ -7,7 +7,8 @@ module.exports.productoSchema = Joi.object({
         unidad: Joi.string().required(),
         desc: Joi.string().required(),
         // imagen: Joi.string().required()
-    }).required()
+    }).required(),
+    deleteImages: Joi.array()
 });
 
 

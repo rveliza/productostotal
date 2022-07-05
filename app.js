@@ -31,11 +31,13 @@ db.once("open", () => {
 const app = express();
 
 app.engine("ejs", ejsMate);
-app.use(express.urlencoded( {extended: true }));
-app.use(methodOverride("_method"));
-
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+app.use(express.urlencoded( {extended: true }));
+app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 const sessionConfig = {
     secret: 'thisshouldbeabettersecret!',
@@ -69,11 +71,9 @@ app.get("/fakeUser", async (req, res) => {
     res.send(newUser);
 });
 
+app.use('/', usersRoutes);
 app.use('/productos', productoRoutes);
 app.use('/productos/:id/reviews', reviewRoutes);
-app.use('/', usersRoutes);
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/", (req, res) => {
     res.render("home");
