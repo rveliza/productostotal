@@ -1,4 +1,5 @@
 const Producto = require('../models/producto');
+const { cloudinary } = require('../cloudinary');
 
 module.exports.index = async (req, res) => {
     const productos = await Producto.find({});
@@ -49,6 +50,16 @@ module.exports.updateProducto = async (req, res) => {
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     // spread the array
     producto.images.push(...imgs);
+        // delete images 
+        if(req.body.deleteImages) {
+            for (let filename of req.body.deleteImages) {
+                // delete images from cloudinary
+                await cloudinary.uploader.destroy(filename);
+            }
+            // delete images from mongo
+            await producto.updateOne( { $pull: { images: { filename: { $in: req.body.deleteImages }}}});
+            console.log(producto);
+        }
     await producto.save()
     req.flash('success', '¡Producto actualizado con éxito!')
     res.redirect(`/productos/${producto._id}`);
